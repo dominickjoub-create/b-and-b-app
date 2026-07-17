@@ -1,4 +1,4 @@
-import { requirePaidUser } from '@/lib/access';
+import { requireUser } from '@/lib/access';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 const SIGNED_URL_TTL_SECONDS = 60 * 10;
 
 export default async function BookPage() {
-  await requirePaidUser();
+  await requireUser();
 
   const admin = createAdminClient();
   const path = process.env.BOOK_PDF_PATH ?? 'k50-study-book.pdf';

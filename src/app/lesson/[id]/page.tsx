@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { requirePaidUser } from '@/lib/access';
+import { requireStudent } from '@/lib/access';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { SECTIONS, orderLessons, type Lesson } from '@/lib/course';
 import VideoPlayer from './video-player';
 
 export const dynamic = 'force-dynamic';
@@ -13,16 +14,24 @@ export default async function LessonPage({
 }: {
   params: { id: string };
 }) {
-  const { supabase, user } = await requirePaidUser();
+  const { supabase, user, profile } = await requireStudent();
+  const code = profile.license_code!;
 
-  // RLS on lessons already restricts this to paying users.
-  const { data: lesson } = await supabase
+  // One query serves the lesson itself plus prev/next navigation.
+  const { data: lessonRows } = await supabase
     .from('lessons')
-    .select('id, title, description, sort_order, video_path')
-    .eq('id', params.id)
-    .single();
+    .select('id, section, title, description, sort_order, video_path, license_codes')
+    .contains('license_codes', [code])
+    .returns<Lesson[]>();
 
-  if (!lesson) notFound();
+  const lessons = orderLessons(lessonRows ?? []);
+  const index = lessons.findIndex((l) => l.id === params.id);
+  if (index === -1) notFound();
+
+  const lesson = lessons[index];
+  const prev = index > 0 ? lessons[index - 1] : null;
+  const next = index < lessons.length - 1 ? lessons[index + 1] : null;
+  const section = SECTIONS.find((s) => s.key === lesson.section);
 
   const { data: progress } = await supabase
     .from('lesson_progress')
@@ -35,16 +44,18 @@ export default async function LessonPage({
   const admin = createAdminClient();
   const { data: signed, error: signError } = await admin.storage
     .from('videos')
-    .createSignedUrl(lesson.video_path, SIGNED_URL_TTL_SECONDS);
+    .createSignedUrl(lesson.video_path!, SIGNED_URL_TTL_SECONDS);
 
   return (
-    <div>
-      <p>
-        <Link href="/dashboard">← Back to all lessons</Link>
+    <div className="lesson-page">
+      <p className="breadcrumbs">
+        <Link href="/dashboard">My classes</Link>
+        <span aria-hidden> / </span>
+        <span className={`section-chip accent-${section?.accent}`}>
+          {section?.emoji} {section?.label}
+        </span>
       </p>
-      <h1>
-        {lesson.sort_order}. {lesson.title}
-      </h1>
+      <h1>{lesson.title}</h1>
       <p className="muted">{lesson.description}</p>
       {signed?.signedUrl ? (
         <VideoPlayer
@@ -58,6 +69,24 @@ export default async function LessonPage({
           Please try again later.
         </p>
       )}
+      <nav className="lesson-nav">
+        {prev ? (
+          <Link href={`/lesson/${prev.id}`} className="button ghost">
+            ← {prev.title}
+          </Link>
+        ) : (
+          <span />
+        )}
+        {next ? (
+          <Link href={`/lesson/${next.id}`} className="button">
+            Next: {next.title} →
+          </Link>
+        ) : (
+          <Link href="/dashboard" className="button">
+            Back to my classes
+          </Link>
+        )}
+      </nav>
     </div>
   );
 }

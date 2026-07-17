@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { LICENSE_CODES, SECTIONS } from '@/lib/course';
 
 export default async function HomePage() {
   const supabase = createClient();
@@ -7,38 +8,69 @@ export default async function HomePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const price = Number(process.env.COURSE_PRICE_ZAR ?? 0).toFixed(2);
+  const cta = user
+    ? { href: '/dashboard', label: 'Go to my classes' }
+    : { href: '/signup', label: 'Start learning free' };
 
   return (
-    <div>
-      <h1>Pass your K50 learners test — first time</h1>
-      <p>
-        The complete online course from Learners Drive Academy in Brewer: video
-        lessons covering everything the examiners test, plus the full study
-        book as a downloadable PDF.
-      </p>
-      <div className="card">
-        <h2>What you get</h2>
-        <ul>
-          <li>Video lessons — rules of the road, signs, controls and manoeuvres</li>
-          <li>The complete K50 study book (PDF, yours to keep)</li>
-          <li>Progress tracking — pick up exactly where you left off</li>
-          <li>Once-off payment of <strong>R{price}</strong> — no subscription</li>
-        </ul>
-        {user ? (
-          <Link href="/dashboard" className="button">
-            Go to my course
+    <div className="landing">
+      <section className="hero">
+        <p className="eyebrow">Learners Drive Academy · Brewer</p>
+        <h1>
+          Pass your learners test — <em>first time</em>
+        </h1>
+        <p className="hero-sub">
+          Video classes and the full study book, built around exactly what the
+          examiners test. Pick your license code and start today.
+        </p>
+        <div className="hero-actions">
+          <Link href={cta.href} className="button large">
+            {cta.label}
           </Link>
-        ) : (
-          <Link href="/signup" className="button">
-            Get started
-          </Link>
-        )}
-      </div>
-      <p className="muted">
-        Secure payment via PayFast. Already signed up?{' '}
-        <Link href="/login">Log in</Link>.
-      </p>
+          {!user && (
+            <Link href="/login" className="button ghost large">
+              Log in
+            </Link>
+          )}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="section-title">Three sections. Everything covered.</h2>
+        <div className="feature-grid">
+          {SECTIONS.map((s) => (
+            <div key={s.key} className={`feature-card accent-${s.accent}`}>
+              <span className="feature-emoji">{s.emoji}</span>
+              <h3>{s.label}</h3>
+              <p className="muted">{s.tagline}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="section-title">Made for your license code</h2>
+        <div className="feature-grid">
+          {LICENSE_CODES.map((c) => (
+            <div key={c.code} className="feature-card">
+              <span className="code-badge">{c.name}</span>
+              <h3>{c.vehicle}</h3>
+              <p className="muted">{c.detail}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="closing-cta">
+        <h2>Ready when you are</h2>
+        <p className="muted">
+          Track your progress class by class, and download the study book to
+          revise offline.
+        </p>
+        <Link href={cta.href} className="button large">
+          {cta.label}
+        </Link>
+      </section>
     </div>
   );
 }

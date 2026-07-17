@@ -9,10 +9,16 @@ PayFast (payments) · Vercel (hosting at `learnersdrive.co.za/app`).
 ## How it works
 
 - Students sign up with email + password (Supabase Auth; passwords are
-  bcrypt-hashed and salted by Supabase automatically).
-- Paying via PayFast fires an ITN webhook to `/api/payfast/itn`, which
-  verifies the notification (signature, merchant ID, amount, and a
-  server-to-server confirmation with PayFast) and then unlocks the course.
+  bcrypt-hashed and salted by Supabase automatically), then pick the
+  license code they're studying for — **Code 8, 10 or 14**.
+- Classes are organised into three sections — **Road Rules**, **Signs**
+  and **Controls** — and filtered by the student's code (e.g. Code 10
+  students see the heavy-vehicle controls class, not the Code 8 one).
+- **PayFast is parked for now**: classes are open to any signed-in
+  student. The full integration (signed checkout + verified ITN webhook
+  at `/api/payfast/itn`) is built and ready — to go live, restore the
+  paid-lessons RLS policy from `0001_init.sql`, switch course pages back
+  to a paid check in `src/lib/access.ts`, and re-enable `/buy`.
 - Videos and the PDF live in **private** Supabase Storage buckets and are
   served through short-lived signed URLs — only after the server checks
   the student has paid. Nothing is publicly reachable.
@@ -33,10 +39,11 @@ open-redirect-safe `next` parameter.
 
 1. Create a project at [supabase.com](https://supabase.com) (free tier is fine).
 2. In the **SQL Editor**, run `supabase/migrations/0001_init.sql`, then
+   `supabase/migrations/0002_sections_and_codes.sql`, then
    `supabase/seed.sql` (edit the lesson titles/paths first if you like).
 3. In **Storage**, you'll see two private buckets created by the migration:
    - `videos` — upload lesson videos (mp4). File names must match each
-     lesson's `video_path` (e.g. `lesson-01.mp4`).
+     lesson's `video_path` (e.g. `road-rules-01.mp4`).
    - `materials` — upload the study book PDF as `k50-study-book.pdf`
      (or change `BOOK_PDF_PATH`). To publish an updated edition later,
      just upload a new file over the same name.
@@ -116,8 +123,11 @@ src/app/api/progress/              progress upsert endpoint
 
 ## Scope decisions (MVP)
 
-- Single course, hard-coded — no courses table. Adding a second course
-  later means adding one and pointing lessons at it.
+- Single course, hard-coded — no courses table. Lessons carry a
+  `section` ('road_rules' | 'signs' | 'controls') and a `license_codes`
+  array saying which of Code 8/10/14 they apply to.
+- Payments parked: any signed-in student can watch classes until PayFast
+  is switched on (see "How it works" for the re-enable steps).
 - Videos stream from Supabase Storage. If bandwidth costs or playback
   quality become a problem at scale, move files to a video CDN (e.g.
   Bunny Stream) and store the new URLs in `lessons.video_path`.

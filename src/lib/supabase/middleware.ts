@@ -3,7 +3,14 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
-const PROTECTED_PREFIXES = ['/dashboard', '/lesson', '/book', '/buy', '/admin'];
+const PROTECTED_PREFIXES = [
+  '/dashboard',
+  '/lesson',
+  '/book',
+  '/buy',
+  '/admin',
+  '/choose-code',
+];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
