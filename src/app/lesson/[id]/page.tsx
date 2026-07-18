@@ -18,10 +18,12 @@ export default async function LessonPage({
   const { supabase, user, profile } = await requireStudent();
   const code = profile.license_code!;
 
-  // One query serves the lesson itself plus prev/next navigation.
+  // Core columns only — these are guaranteed to exist, so the lesson
+  // lookup (and the 404 decision) never depends on a newer migration
+  // having been run. This drives prev/next navigation too.
   const { data: lessonRows } = await supabase
     .from('lessons')
-    .select('id, section, title, description, sort_order, video_path, content, license_codes')
+    .select('id, section, title, description, sort_order, video_path, license_codes')
     .contains('license_codes', [code])
     .returns<Lesson[]>();
 
@@ -34,8 +36,18 @@ export default async function LessonPage({
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const section = SECTIONS.find((s) => s.key === lesson.section);
 
+  // Lesson text — only exists after migration 0004. Fetched on its own so
+  // a missing column can never 404 the whole lesson.
+  const { data: contentRow } = await supabase
+    .from('lessons')
+    .select('content')
+    .eq('id', lesson.id)
+    .maybeSingle();
+  const content = (contentRow as { content?: string } | null)?.content ?? '';
+
   // Quiz questions — safe columns only (the correct answer never leaves
-  // the server; grading happens in the submitQuiz action).
+  // the server). Also gated behind 0004; a missing table just means "no
+  // quiz yet", never a 404.
   const { data: questions } = await supabase
     .from('questions')
     .select('id, lesson_id, question, options, sort_order')
@@ -82,11 +94,9 @@ export default async function LessonPage({
         </p>
       )}
 
-      {lesson.content?.trim() && (
+      {content.trim() && (
         <div className="lesson-content">
-          {lesson.content
-            .split(/\n{2,}/)
-            .map((para, i) => <p key={i}>{para}</p>)}
+          {content.split(/\n{2,}/).map((para, i) => <p key={i}>{para}</p>)}
         </div>
       )}
 

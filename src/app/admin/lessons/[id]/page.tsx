@@ -23,13 +23,22 @@ export default async function AdminLessonPage({
   await requireAdmin();
   const admin = createAdminClient();
 
+  // Core columns first so a missing `content` column (0004 not run yet)
+  // can't 404 this page; content is fetched separately and gracefully.
   const { data: lesson } = await admin
     .from('lessons')
-    .select('id, title, content')
+    .select('id, title')
     .eq('id', params.id)
     .single();
 
   if (!lesson) notFound();
+
+  const { data: contentRow } = await admin
+    .from('lessons')
+    .select('content')
+    .eq('id', params.id)
+    .maybeSingle();
+  const lessonContent = (contentRow as { content?: string } | null)?.content ?? '';
 
   const { data: questions } = await admin
     .from('questions')
@@ -57,7 +66,7 @@ export default async function AdminLessonPage({
           <textarea
             name="content"
             rows={6}
-            defaultValue={lesson.content ?? ''}
+            defaultValue={lessonContent}
             className="admin-textarea"
             placeholder="Type the notes for this class…"
           />
