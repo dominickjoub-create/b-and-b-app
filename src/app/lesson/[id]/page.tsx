@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireStudent } from '@/lib/access';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { SECTIONS, orderLessons, type Lesson } from '@/lib/course';
+import { SECTIONS, orderLessons, type Lesson, type Question } from '@/lib/course';
 import VideoPlayer from './video-player';
+import Quiz from './quiz';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +21,7 @@ export default async function LessonPage({
   // One query serves the lesson itself plus prev/next navigation.
   const { data: lessonRows } = await supabase
     .from('lessons')
-    .select('id, section, title, description, sort_order, video_path, license_codes')
+    .select('id, section, title, description, sort_order, video_path, content, license_codes')
     .contains('license_codes', [code])
     .returns<Lesson[]>();
 
@@ -32,6 +33,16 @@ export default async function LessonPage({
   const prev = index > 0 ? lessons[index - 1] : null;
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const section = SECTIONS.find((s) => s.key === lesson.section);
+
+  // Quiz questions — safe columns only (the correct answer never leaves
+  // the server; grading happens in the submitQuiz action).
+  const { data: questions } = await supabase
+    .from('questions')
+    .select('id, lesson_id, question, options, sort_order')
+    .eq('lesson_id', lesson.id)
+    .order('sort_order')
+    .returns<Question[]>();
+  const hasQuiz = (questions?.length ?? 0) > 0;
 
   const { data: progress } = await supabase
     .from('lesson_progress')
@@ -62,6 +73,7 @@ export default async function LessonPage({
           lessonId={lesson.id}
           src={signed.signedUrl}
           startAt={progress?.completed ? 0 : progress?.last_position_seconds ?? 0}
+          hasQuiz={hasQuiz}
         />
       ) : (
         <p className="error">
@@ -69,6 +81,17 @@ export default async function LessonPage({
           Please try again later.
         </p>
       )}
+
+      {lesson.content?.trim() && (
+        <div className="lesson-content">
+          {lesson.content
+            .split(/\n{2,}/)
+            .map((para, i) => <p key={i}>{para}</p>)}
+        </div>
+      )}
+
+      {hasQuiz && <Quiz lessonId={lesson.id} questions={questions!} />}
+
       <nav className="lesson-nav">
         {prev ? (
           <Link href={`/lesson/${prev.id}`} className="button ghost">

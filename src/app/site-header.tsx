@@ -48,6 +48,9 @@ export default function SiteHeader({
               <Link href="/book" onClick={close}>
                 Book
               </Link>
+              <Link href="/account" onClick={close}>
+                Account
+              </Link>
               {isAdmin && (
                 <Link href="/admin" onClick={close}>
                   Admin

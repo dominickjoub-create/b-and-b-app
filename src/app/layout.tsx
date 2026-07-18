@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import './globals.css';
 import { createClient } from '@/lib/supabase/server';
 import SiteHeader from './site-header';
@@ -37,6 +38,8 @@ export default async function RootLayout({
         <footer className="site-footer">
           © {new Date().getFullYear()} B&amp;B Driving Academy · Learn safely ·
           Drive confidently
+          <br />
+          <Link href="/privacy">Privacy policy</Link>
         </footer>
       </body>
     </html>

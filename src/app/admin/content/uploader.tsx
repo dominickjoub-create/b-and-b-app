@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { SECTIONS, type Lesson } from '@/lib/course';
 import { createBookUploadUrl, createVideoUploadUrl } from './actions';
@@ -97,16 +98,24 @@ export default function Uploader({ lessons }: { lessons: Lesson[] }) {
                       </span>
                       {statusText(s)}
                     </div>
-                    <label className="button ghost small">
-                      {s?.state === 'uploading' ? 'Uploading…' : 'Upload video'}
-                      <input
-                        type="file"
-                        accept="video/mp4,video/*"
-                        hidden
-                        disabled={s?.state === 'uploading'}
-                        onChange={(e) => onVideoPick(lesson, e.target.files?.[0])}
-                      />
-                    </label>
+                    <div className="up-actions">
+                      <Link
+                        href={`/admin/lessons/${lesson.id}`}
+                        className="button ghost small"
+                      >
+                        Text &amp; quiz
+                      </Link>
+                      <label className="button ghost small">
+                        {s?.state === 'uploading' ? 'Uploading…' : 'Upload video'}
+                        <input
+                          type="file"
+                          accept="video/mp4,video/*"
+                          hidden
+                          disabled={s?.state === 'uploading'}
+                          onChange={(e) => onVideoPick(lesson, e.target.files?.[0])}
+                        />
+                      </label>
+                    </div>
                   </li>
                 );
               })}

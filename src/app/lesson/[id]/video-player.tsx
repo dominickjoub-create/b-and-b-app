@@ -10,10 +10,14 @@ export default function VideoPlayer({
   lessonId,
   src,
   startAt,
+  hasQuiz = false,
 }: {
   lessonId: string;
   src: string;
   startAt: number;
+  // When a lesson has a quiz, watching alone does NOT complete it — the
+  // quiz pass does. So we only save position, never the completed flag.
+  hasQuiz?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastSavedAt = useRef(0);
@@ -50,12 +54,13 @@ export default function VideoPlayer({
       if (now - lastSavedAt.current < SAVE_INTERVAL_MS) return;
       lastSavedAt.current = now;
       const nearEnd =
+        !hasQuiz &&
         video.duration > 0 &&
         video.duration - video.currentTime < COMPLETE_THRESHOLD_SECONDS;
       save(video.currentTime, nearEnd);
     };
 
-    const onEnded = () => save(video.duration, true);
+    const onEnded = () => save(video.duration, !hasQuiz);
     const onPause = () => save(video.currentTime, false);
 
     video.addEventListener('loadedmetadata', onLoaded);
@@ -68,7 +73,7 @@ export default function VideoPlayer({
       video.removeEventListener('ended', onEnded);
       video.removeEventListener('pause', onPause);
     };
-  }, [save, startAt]);
+  }, [save, startAt, hasQuiz]);
 
   return (
     <video

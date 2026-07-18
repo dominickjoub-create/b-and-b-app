@@ -10,6 +10,7 @@ const PROTECTED_PREFIXES = [
   '/buy',
   '/admin',
   '/choose-code',
+  '/account',
 ];
 
 export async function updateSession(request: NextRequest) {

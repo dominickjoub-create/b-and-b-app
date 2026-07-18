@@ -42,6 +42,7 @@ open-redirect-safe `next` parameter.
    `supabase/migrations/0001_init.sql`, then
    `supabase/migrations/0002_sections_and_codes.sql`, then
    `supabase/migrations/0003_add_code_a.sql`, then
+   `supabase/migrations/0004_quizzes_and_content.sql`, then
    `supabase/seed.sql` (edit the lesson titles/paths first if you like).
    Already have an older database? Just run any migration files you
    haven't run yet — they build on each other in number order.

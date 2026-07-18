@@ -68,7 +68,21 @@ export type Lesson = {
   description: string;
   sort_order: number;
   video_path?: string;
+  content?: string;
   license_codes: string[];
+};
+
+// Percentage a student must score on a lesson's quiz to complete it.
+export const PASS_THRESHOLD = 95;
+
+// Quiz question as sent to the browser — deliberately WITHOUT the correct
+// answer (correct_index stays server-side; grading happens on the server).
+export type Question = {
+  id: string;
+  lesson_id: string;
+  question: string;
+  options: string[];
+  sort_order: number;
 };
 
 // Stable course order: section order as declared above, then sort_order.
