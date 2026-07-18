@@ -2,12 +2,14 @@
 -- License codes become text ('A','8','10','14') instead of integers,
 -- since "A" isn't a number. Run after 0002.
 
--- profiles.license_code: integer -> text
-alter table public.profiles
-  alter column license_code type text using license_code::text;
-
+-- profiles.license_code: integer -> text.
+-- Drop the old integer check FIRST — otherwise changing the column to
+-- text makes the existing "in (8,10,14)" rule compare text = integer.
 alter table public.profiles
   drop constraint if exists profiles_license_code_check;
+
+alter table public.profiles
+  alter column license_code type text using license_code::text;
 
 alter table public.profiles
   add constraint profiles_license_code_check
@@ -22,8 +24,7 @@ alter table public.lessons
 
 -- New motorcycle-specific control classes (Code A only). Road-rules and
 -- signs classes already apply to everyone, so Code A students get those
--- automatically. Explicit casts on the first row give every VALUES column
--- a definite type. Safe to run more than once — skips paths that exist.
+-- automatically. Safe to run more than once — skips paths that exist.
 insert into public.lessons (section, title, description, sort_order, video_path, license_codes)
 select v.section, v.title, v.description, v.sort_order, v.video_path, v.license_codes
 from (values
