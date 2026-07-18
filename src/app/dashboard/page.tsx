@@ -122,7 +122,7 @@ export default async function DashboardPage() {
 
       <section className="book-banner">
         <div>
-          <h2>📘 K50 Study Book</h2>
+          <h2>📘 K53 Study Book</h2>
           <p className="muted">
             The full book as a PDF — download it and study offline.
           </p>

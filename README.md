@@ -1,6 +1,6 @@
-# Learners Drive Academy — K50 Course App
+# Learners Drive Academy — K53 Course App
 
-Online K50 learners-test prep course: video lessons, a downloadable study
+Online K53 learners-test prep course: video lessons, a downloadable study
 book (PDF), secure login, and once-off payment via PayFast.
 
 **Stack:** Next.js 14 (App Router) · Supabase (auth + Postgres + storage) ·
@@ -44,7 +44,7 @@ open-redirect-safe `next` parameter.
 3. In **Storage**, you'll see two private buckets created by the migration:
    - `videos` — upload lesson videos (mp4). File names must match each
      lesson's `video_path` (e.g. `road-rules-01.mp4`).
-   - `materials` — upload the study book PDF as `k50-study-book.pdf`
+   - `materials` — upload the study book PDF as `k53-study-book.pdf`
      (or change `BOOK_PDF_PATH`). To publish an updated edition later,
      just upload a new file over the same name.
 4. In **Authentication → Providers**, keep Email enabled. Leave "Confirm

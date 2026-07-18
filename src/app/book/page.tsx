@@ -9,14 +9,14 @@ export default async function BookPage() {
   await requireUser();
 
   const admin = createAdminClient();
-  const path = process.env.BOOK_PDF_PATH ?? 'k50-study-book.pdf';
+  const path = process.env.BOOK_PDF_PATH ?? 'k53-study-book.pdf';
   const { data: signed } = await admin.storage
     .from('materials')
     .createSignedUrl(path, SIGNED_URL_TTL_SECONDS, { download: true });
 
   return (
     <div>
-      <h1>K50 Study Book</h1>
+      <h1>K53 Study Book</h1>
       <div className="card">
         <p>
           The complete study book that goes with the video lessons. It&apos;s

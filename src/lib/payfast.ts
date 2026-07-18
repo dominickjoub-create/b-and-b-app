@@ -80,8 +80,8 @@ export function buildCheckoutFields(input: {
     email_address: input.email,
     m_payment_id: input.mPaymentId,
     amount,
-    item_name: 'K50 Learners Course',
-    item_description: 'Learners Drive Academy — full K50 online course',
+    item_name: 'K53 Learners Course',
+    item_description: 'Learners Drive Academy — full K53 online course',
     custom_str1: input.userId,
   };
 

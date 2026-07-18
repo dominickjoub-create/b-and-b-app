@@ -1,4 +1,4 @@
--- Learners Drive Academy — K50 course app schema
+-- Learners Drive Academy — K53 course app schema
 -- Run this in the Supabase SQL editor (or `supabase db push`) on a fresh project.
 
 -- ============================================================
@@ -41,7 +41,7 @@ create trigger on_auth_user_created
   for each row execute function public.handle_new_user();
 
 -- ============================================================
--- Lessons: single hard-coded K50 course, so no courses table.
+-- Lessons: single hard-coded K53 course, so no courses table.
 -- video_path points at an object in the private `videos` bucket.
 -- ============================================================
 create table public.lessons (
