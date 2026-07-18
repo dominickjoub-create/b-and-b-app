@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { requireAdmin } from '@/lib/access';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -61,7 +62,12 @@ export default async function AdminPage() {
 
   return (
     <div>
-      <h1>Sales dashboard</h1>
+      <div className="admin-top">
+        <h1>Sales dashboard</h1>
+        <Link href="/admin/content" className="button">
+          ⬆ Upload videos &amp; book
+        </Link>
+      </div>
       <div className="stats-grid">
         <div className="stat">
           <div className="value">{paid.length}</div>

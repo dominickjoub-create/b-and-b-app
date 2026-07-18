@@ -81,7 +81,7 @@ export function buildCheckoutFields(input: {
     m_payment_id: input.mPaymentId,
     amount,
     item_name: 'K53 Learners Course',
-    item_description: 'Learners Drive Academy — full K53 online course',
+    item_description: 'B&B Driving Academy — full K53 online course',
     custom_str1: input.userId,
   };
 

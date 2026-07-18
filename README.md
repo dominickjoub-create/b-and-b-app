@@ -1,4 +1,4 @@
-# Learners Drive Academy — K53 Course App
+# B&B Driving Academy — K53 Course App
 
 Online K53 learners-test prep course: video lessons, a downloadable study
 book (PDF), secure login, and once-off payment via PayFast.
@@ -38,9 +38,13 @@ open-redirect-safe `next` parameter.
 ### 1. Supabase
 
 1. Create a project at [supabase.com](https://supabase.com) (free tier is fine).
-2. In the **SQL Editor**, run `supabase/migrations/0001_init.sql`, then
+2. In the **SQL Editor**, run the migrations in order:
+   `supabase/migrations/0001_init.sql`, then
    `supabase/migrations/0002_sections_and_codes.sql`, then
+   `supabase/migrations/0003_add_code_a.sql`, then
    `supabase/seed.sql` (edit the lesson titles/paths first if you like).
+   Already have an older database? Just run any migration files you
+   haven't run yet — they build on each other in number order.
 3. In **Storage**, you'll see two private buckets created by the migration:
    - `videos` — upload lesson videos (mp4). File names must match each
      lesson's `video_path` (e.g. `road-rules-01.mp4`).

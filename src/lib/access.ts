@@ -8,7 +8,7 @@ export type Profile = {
   full_name: string | null;
   has_access: boolean;
   is_admin: boolean;
-  license_code: number | null;
+  license_code: string | null;
 };
 
 // For protected pages: middleware already guarantees a session, but we

@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import './globals.css';
+import logo from '@/assets/bnb-logo.jpeg';
 import { createClient } from '@/lib/supabase/server';
 import { signOut } from '@/app/(auth)/actions';
 
 export const metadata: Metadata = {
-  title: 'Learners Drive Academy',
+  title: 'B&B Driving Academy',
   description:
-    'Pass your learners test first time. Online video classes + study book for Code 8, 10 and 14.',
+    'Pass your K53 learners test first time. Online video classes + study book for Code A, 8, 10 and 14.',
 };
 
 export default async function RootLayout({
@@ -35,7 +37,12 @@ export default async function RootLayout({
       <body>
         <header className="site-header">
           <Link href="/" className="brand">
-            <span className="brand-mark">L</span> Learners Drive
+            <span className="brand-logo">
+              <Image src={logo} alt="B&B Driving Academy" height={34} priority />
+            </span>
+            <span className="brand-name">
+              B&amp;B <span>Driving Academy</span>
+            </span>
           </Link>
           <nav>
             {user ? (
@@ -61,7 +68,8 @@ export default async function RootLayout({
         </header>
         <main>{children}</main>
         <footer className="site-footer">
-          © {new Date().getFullYear()} Learners Drive Academy, Brewer
+          © {new Date().getFullYear()} B&amp;B Driving Academy · Learn safely ·
+          Drive confidently
         </footer>
       </body>
     </html>

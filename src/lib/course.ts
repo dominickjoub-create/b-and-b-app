@@ -30,19 +30,25 @@ export type SectionKey = (typeof SECTIONS)[number]['key'];
 
 export const LICENSE_CODES = [
   {
-    code: 8,
+    code: 'A',
+    name: 'Code A',
+    vehicle: 'Motorcycles',
+    detail: 'Motorbikes and scooters of any engine size.',
+  },
+  {
+    code: '8',
     name: 'Code 8',
     vehicle: 'Light motor vehicles',
     detail: 'Cars and bakkies up to 3 500 kg — the everyday driver’s license.',
   },
   {
-    code: 10,
+    code: '10',
     name: 'Code 10',
     vehicle: 'Heavy motor vehicles',
     detail: 'Trucks and buses over 3 500 kg with a light trailer.',
   },
   {
-    code: 14,
+    code: '14',
     name: 'Code 14',
     vehicle: 'Extra-heavy combinations',
     detail: 'Articulated trucks and combinations with heavy trailers.',
@@ -51,7 +57,7 @@ export const LICENSE_CODES = [
 
 export type LicenseCode = (typeof LICENSE_CODES)[number]['code'];
 
-export function isLicenseCode(value: number): value is LicenseCode {
+export function isLicenseCode(value: string): value is LicenseCode {
   return LICENSE_CODES.some((c) => c.code === value);
 }
 
@@ -62,7 +68,7 @@ export type Lesson = {
   description: string;
   sort_order: number;
   video_path?: string;
-  license_codes: number[];
+  license_codes: string[];
 };
 
 // Stable course order: section order as declared above, then sort_order.

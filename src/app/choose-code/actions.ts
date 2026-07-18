@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { isLicenseCode } from '@/lib/course';
 
 export async function chooseCode(formData: FormData) {
-  const code = Number(formData.get('code'));
+  const code = String(formData.get('code') ?? '');
   if (!isLicenseCode(code)) redirect('/choose-code');
 
   const supabase = createClient();

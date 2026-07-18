@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import logo from '@/assets/bnb-logo.jpeg';
 import { requireStudent } from '@/lib/access';
 import { LICENSE_CODES, SECTIONS, orderLessons, type Lesson } from '@/lib/course';
 
@@ -46,6 +48,12 @@ export default async function DashboardPage() {
     <div>
       <section className="dash-hero">
         <div>
+          <div className="dash-brand">
+            <span className="brand-logo">
+              <Image src={logo} alt="B&B Driving Academy" height={40} priority />
+            </span>
+            <span>B&amp;B Driving Academy</span>
+          </div>
           <p className="eyebrow">
             {codeMeta?.name} · {codeMeta?.vehicle}{' '}
             <Link href="/choose-code" className="switch-link">

@@ -15,13 +15,14 @@ export default async function HomePage() {
   return (
     <div className="landing">
       <section className="hero">
-        <p className="eyebrow">Learners Drive Academy · Brewer</p>
+        <p className="eyebrow">B&amp;B Driving Academy</p>
         <h1>
-          Pass your learners test — <em>first time</em>
+          Pass your K53 learners test — <em>first time</em>
         </h1>
         <p className="hero-sub">
           Video classes and the full study book, built around exactly what the
-          examiners test. Pick your license code and start today.
+          examiners test. Pick your license code and start today. Learn safely,
+          drive confidently.
         </p>
         <div className="hero-actions">
           <Link href={cta.href} className="button large">

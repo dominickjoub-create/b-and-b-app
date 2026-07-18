@@ -1,4 +1,4 @@
--- Learners Drive Academy — K53 course app schema
+-- B&B Driving Academy — K53 course app schema
 -- Run this in the Supabase SQL editor (or `supabase db push`) on a fresh project.
 
 -- ============================================================

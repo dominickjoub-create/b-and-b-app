@@ -21,4 +21,9 @@ insert into public.lessons (section, title, description, sort_order, video_path,
   ('controls', 'Light vehicle controls (Code 8)', 'Clutch, brakes, steering and mirrors in a light motor vehicle.', 2, 'controls-02-code8.mp4', '{8}'),
   ('controls', 'Heavy vehicle controls (Code 10)', 'Air brakes, gear splitting and handling a heavy rigid vehicle.', 3, 'controls-03-code10.mp4', '{10}'),
   ('controls', 'Articulated combinations (Code 14)', 'Coupling, uncoupling and controlling an articulated combination.', 4, 'controls-04-code14.mp4', '{14}'),
-  ('controls', 'Yard test manoeuvres', 'Alley docking, parallel parking and the hill start, demonstrated.', 5, 'controls-05.mp4', '{8,10,14}');
+  ('controls', 'Yard test manoeuvres', 'Alley docking, parallel parking and the hill start, demonstrated.', 5, 'controls-05.mp4', '{8,10,14}'),
+
+  -- Controls — Motorcycle (Code A)
+  ('controls', 'Motorcycle pre-ride inspection (Code A)', 'The full safety check every rider does before setting off.', 6, 'controls-06-codeA.mp4', '{A}'),
+  ('controls', 'Motorcycle controls & balance (Code A)', 'Clutch, throttle, both brakes, gears and low-speed balance.', 7, 'controls-07-codeA.mp4', '{A}'),
+  ('controls', 'Motorcycle yard manoeuvres (Code A)', 'The figure-of-eight, slow ride and incline test, demonstrated.', 8, 'controls-08-codeA.mp4', '{A}');
