@@ -1,0 +1,34 @@
+name: CI
+
+# Runs on every push to main and every pull request, so broken code and
+# type errors are caught before they reach production. Addresses the
+# "code review / CI" items: typecheck, build, and a dependency audit.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-dummy-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: ci-dummy-service-key
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000/app
+          COURSE_PRICE_ZAR: "299.00"
+          PAYFAST_MERCHANT_ID: "10000100"
+          PAYFAST_MERCHANT_KEY: ci-dummy-key
+      - name: Dependency audit (informational)
+        run: npm audit --audit-level=high || true

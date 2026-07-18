@@ -1,0 +1,18 @@
+version: 2
+updates:
+  # Scan npm dependencies for known vulnerabilities and version updates,
+  # opening PRs automatically. Addresses "dependency scanning and
+  # vulnerability patching".
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      all-npm:
+        patterns: ["*"]
+  # Keep GitHub Actions themselves patched too.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
